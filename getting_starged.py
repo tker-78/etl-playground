@@ -16,5 +16,5 @@ def main() -> list[str]:
     return results
 
 if __name__ == "__main__":
-    main()
+    main.serve(name="Getting Started")
 
