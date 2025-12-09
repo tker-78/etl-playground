@@ -1,3 +1,5 @@
+psycopg2-binary
+prefect-sqlalchemy
 aiosqlite==0.21.0
 alembic==1.17.2
 annotated-doc==0.0.4

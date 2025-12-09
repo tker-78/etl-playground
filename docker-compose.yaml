@@ -10,7 +10,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   prefect-server:
-    image: prefecthq/prefect:3.3.3-python3.13
+    image: prefecthq/prefect:3-python3.13
     restart: always
     command: prefect server start
     ports:
@@ -21,19 +21,27 @@ services:
       PREFECT_SERVER_API_HOST: 0.0.0.0
       PREFECT_SERVER_DATABASE_CONNECTION_URL: postgresql+asyncpg://prefect:prefect@prefect-db:5432/prefect
 
-  tasks:
-    image: prefecthq/prefect:3.3.3-python3.13
-    command: uv run -m tasks
+  worker:
+    image: prefecthq/prefect:3-python3.13
+    command: prefect worker start --pool default-agent-pool
     environment:
       PREFECT_API_URL: http://prefect-server:4200/api
-      PREFECT_LOCAL_STORAGE_PATH: /task-storage
-      PYTHONPATH: /app
     depends_on:
       prefect-server:
         condition: service_started
 
+  flow:
+    image: prefecthq/prefect:3-python3.13
+    working_dir: /app
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+      PREFECT_LOCAL_STORAGE_PATH: /flow-storage
+      PYTHONPATH: /app
+    depends_on:
+      prefect-server:
+        condition: service_started
     volumes:
-      - task-storage:/task-storage
+      - flow-storage:/flow-storage
       - ./:/app
 
   api:
@@ -43,15 +51,28 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      tasks:
+      flow:
         condition: service_started
     environment:
       PREFECT_API_URL: http://prefect-server:4200/api
-      PREFECT_LOCAL_STORAGE_PATH: /task-storage
+      PREFECT_LOCAL_STORAGE_PATH: /flow-storage
       PYTHONPATH: /app
     volumes:
-      - task-storage:/task-storage
+      - flow-storage:/flow-storage
       - ./:/app
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 volumes:
-  task-storage: {}
-  postgres_data: {}
+  flow-storage:
+  postgres_data:
+  db-data:
