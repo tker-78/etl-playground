@@ -33,6 +33,7 @@ services:
   flow:
     image: prefecthq/prefect:3-python3.13
     working_dir: /app
+    command: tail -f /dev/null
     environment:
       PREFECT_API_URL: http://prefect-server:4200/api
       PREFECT_LOCAL_STORAGE_PATH: /flow-storage
