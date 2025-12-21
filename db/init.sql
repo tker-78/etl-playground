@@ -1,25 +1,110 @@
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(255)
+CREATE SCHEMA IF NOT EXISTS staging;
+
+CREATE TABLE IF NOT EXISTS customers (
+    customer_id TEXT,
+    customer_unique_id TEXT,
+    customer_zip_code_prefix TEXT,
+    customer_city TEXT,
+    customer_state TEXT
 );
 
-CREATE TABLE IF NOT EXISTS posts (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    user_id INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+CREATE TABLE IF NOT EXISTS geolocations (
+    geolocation_zip_code_prefix TEXT,
+    geolocation_lat TEXT,
+    geolocation_lng TEXT,
+    geolocation_city TEXT,
+    geolocation_state TEXT
 );
 
-INSERT INTO users (username, password, email) VALUES ('admin', 'password', 'admin@example.com');
-INSERT INTO users (username, password, email) VALUES ('general', 'password', 'general@example.com');
-INSERT INTO users (username, password, email) VALUES ('viewer', 'password', 'viewer@example.com');
+CREATE TABLE IF NOT EXISTS order_items (
+    order_id            TEXT,
+    order_item_id       TEXT,
+    product_id          TEXT,
+    seller_id           TEXT,
+    shipping_limit_date TEXT,
+    price               TEXT,
+    freight_value       TEXT
+);
 
-INSERT INTO posts (title, content, user_id) VALUES ('First Post', 'This is the first post!', 1);
-INSERT INTO posts (title, content, user_id) VALUES ('Second Post', 'This is the second post!', 2);
-INSERT INTO posts (title, content, user_id) VALUES ('Third Post', 'This is the third post!', 3);
+CREATE TABLE IF NOT EXISTS order_payments (
+    order_id TEXT,
+    payment_sequential TEXT,
+    payment_type TEXT,
+    payment_installments TEXT,
+    payment_value TEXT
+);
+
+CREATE TABLE IF NOT EXISTS order_reviews (
+    review_id TEXT,
+    order_id TEXT,
+    review_score TEXT,
+    review_comment_title TEXT,
+    review_comment_message TEXT,
+    review_creation_date TEXT,
+    review_answer_timestamp TEXT
+);
+
+
+CREATE TABLE IF NOT EXISTS orders (
+    order_id TEXT,
+    customer_id TEXT,
+    order_status TEXT,
+    order_purchase_timestamp TEXT,
+    order_approved_at TEXT,
+    order_delivered_carrier_date TEXT,
+    order_delivered_customer_date TEXT,
+    order_estimated_delivery_date TEXT
+);
+
+
+CREATE TABLE IF NOT EXISTS products (
+    product_id TEXT,
+    product_category_name TEXT,
+    product_name_lenght TEXT,
+    product_description_lenght TEXT,
+    product_photos_qty TEXT,
+    product_weight_g TEXT,
+    product_length_cm TEXT,
+    product_height_cm TEXT,
+    product_width_cm TEXT
+);
+
+CREATE TABLE IF NOT EXISTS sellers (
+    seller_id TEXT,
+    seller_zip_code_prefix TEXT,
+    seller_city TEXT,
+    seller_state TEXT
+);
+
+CREATE TABLE IF NOT EXISTS product_category_name_translation (
+    product_category_name TEXT,
+    product_category_name_english TEXT
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
