@@ -76,12 +76,12 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./db:/docker-entrypoint-initdb.d
       - ./data/brazilian-e-commerce:/data/brazilian-e-commerce
-    networks:
-      - etl-net
+#    networks:
+#      - etl-net
 volumes:
   flow-storage:
   postgres_data:
   db-data:
-networks:
-  etl-net:
-    external: true
+#networks:
+#  etl-net:
+#    external: true
