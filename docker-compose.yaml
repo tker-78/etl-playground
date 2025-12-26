@@ -29,6 +29,7 @@ services:
     depends_on:
       prefect-server:
         condition: service_started
+    restart: always
 
   flow:
     image: prefecthq/prefect:3-python3.13
@@ -41,6 +42,7 @@ services:
     depends_on:
       prefect-server:
         condition: service_started
+    restart: unless-stopped
     volumes:
       - flow-storage:/flow-storage
       - ./:/app
@@ -62,7 +64,7 @@ services:
       - flow-storage:/flow-storage
       - ./:/app
 
-  db:
+  etl-db:
     image: postgres:15
     restart: always
     environment:
@@ -74,7 +76,12 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./db:/docker-entrypoint-initdb.d
       - ./data/brazilian-e-commerce:/data/brazilian-e-commerce
+    networks:
+      - etl-net
 volumes:
   flow-storage:
   postgres_data:
   db-data:
+networks:
+  etl-net:
+    external: true

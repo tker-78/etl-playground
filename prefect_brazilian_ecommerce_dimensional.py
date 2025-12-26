@@ -234,14 +234,14 @@ def create_staging_tables(block_name: str) -> None:
 def load_csv_to_table(block_name: str, csv_path: Path, table: str, batch_size: int = 5000) -> None:
     with SqlAlchemyConnector.load(block_name) as connector:
         connector.execute(f"TRUNCATE TABLE {table};")
-        with csv_path.open("r", encoding="utf-8") as handle:
+        with csv_path.open("r", encoding="utf-8-sig") as handle:
             reader = csv.DictReader(handle)
             if not reader.fieldnames:
                 return
             columns = reader.fieldnames
             column_list = ", ".join(columns)
             values_list = ", ".join([f":{col}" for col in columns])
-            insert_sql = f"INSERT INTO {table} ({column_list}) VALUES ({values_list});"
+            insert_sql = f'INSERT INTO {table} ({column_list}) VALUES ({values_list});'
             for batch in _batched(reader, batch_size=batch_size):
                 connector.execute_many(insert_sql, batch)
 

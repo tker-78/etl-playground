@@ -8,7 +8,7 @@ def db_connection():
         driver=SyncDriver.POSTGRESQL_PSYCOPG2,
         username="postgres",
         password=SecretStr("postgres"),
-        host="db",
+        host="etl-db",
         port=5432,
         database="postgres"
     )
