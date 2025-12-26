@@ -34,7 +34,7 @@ for csv in "${DATA_DIR}"/*.csv; do
   psql \
     --username "$POSTGRES_USER" \
     <<SQL
-\\copy ${table} FROM '${csv}' WITH (FORMAT CSV, HEADER);
+\\copy staging.${table} FROM '${csv}' WITH (FORMAT CSV, HEADER);
 SQL
 
 done

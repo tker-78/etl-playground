@@ -600,7 +600,7 @@ def brazilian_ecommerce_dimensional_etl(
     block_name: str = "my-postgres-connection",
     data_dir: str = "data/brazilian-e-commerce",
 ) -> None:
-    create_staging_tables(block_name)
+    # create_staging_tables(block_name)
     create_dw_tables(block_name)
 
     data_path = Path(data_dir)

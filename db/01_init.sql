@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS staging;
 
-CREATE TABLE IF NOT EXISTS customers (
+CREATE TABLE IF NOT EXISTS staging.customers (
     customer_id TEXT,
     customer_unique_id TEXT,
     customer_zip_code_prefix TEXT,
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS customers (
     customer_state TEXT
 );
 
-CREATE TABLE IF NOT EXISTS geolocations (
+CREATE TABLE IF NOT EXISTS staging.geolocations (
     geolocation_zip_code_prefix TEXT,
     geolocation_lat TEXT,
     geolocation_lng TEXT,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS geolocations (
     geolocation_state TEXT
 );
 
-CREATE TABLE IF NOT EXISTS order_items (
+CREATE TABLE IF NOT EXISTS staging.order_items (
     order_id            TEXT,
     order_item_id       TEXT,
     product_id          TEXT,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     freight_value       TEXT
 );
 
-CREATE TABLE IF NOT EXISTS order_payments (
+CREATE TABLE IF NOT EXISTS staging.order_payments (
     order_id TEXT,
     payment_sequential TEXT,
     payment_type TEXT,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS order_payments (
     payment_value TEXT
 );
 
-CREATE TABLE IF NOT EXISTS order_reviews (
+CREATE TABLE IF NOT EXISTS staging.order_reviews (
     review_id TEXT,
     order_id TEXT,
     review_score TEXT,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS order_reviews (
 );
 
 
-CREATE TABLE IF NOT EXISTS orders (
+CREATE TABLE IF NOT EXISTS staging.orders (
     order_id TEXT,
     customer_id TEXT,
     order_status TEXT,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 
-CREATE TABLE IF NOT EXISTS products (
+CREATE TABLE IF NOT EXISTS staging.products (
     product_id TEXT,
     product_category_name TEXT,
     product_name_lenght TEXT,
@@ -69,14 +69,14 @@ CREATE TABLE IF NOT EXISTS products (
     product_width_cm TEXT
 );
 
-CREATE TABLE IF NOT EXISTS sellers (
+CREATE TABLE IF NOT EXISTS staging.sellers (
     seller_id TEXT,
     seller_zip_code_prefix TEXT,
     seller_city TEXT,
     seller_state TEXT
 );
 
-CREATE TABLE IF NOT EXISTS product_category_name_translation (
+CREATE TABLE IF NOT EXISTS staging.product_category_name_translation (
     product_category_name TEXT,
     product_category_name_english TEXT
 );
