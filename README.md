@@ -26,7 +26,7 @@ docker compose exec flow python etl/flows/prefect_brazilian_ecommerce_dimensiona
 ```
 
 ```
-docker compose -f superset/docker-compose-image-tag.yaml up -d
+docker compose -f superset/docker-compose-image-tag.yml up -d
 ```
 
 :memo:
