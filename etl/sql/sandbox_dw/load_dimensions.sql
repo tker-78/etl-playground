@@ -38,3 +38,50 @@ SELECT
     EXTRACT(MONTH FROM d)::int AS month,
     EXTRACT(DAY FROM d)::int AS day
 FROM date_bounds, generate_series(min_date, max_date, '1 day'::interval) AS d;
+
+
+-- load customer dimension
+INSERT INTO sdw.dim_customer (
+                              customer_id,
+                              customer_unique_id,
+                              zip_code_prefix,
+                              city,
+                              state
+)
+SELECT DISTINCT
+    customer_id,
+    customer_unique_id,
+    customer_zip_code_prefix,
+    customer_city,
+    customer_state
+FROM staging.customers
+WHERE customer_id IS NOT NULL;
+
+-- load seller dimension
+INSERT INTO sdw.dim_seller (seller_id, zip_code_prefix, city, state)
+SELECT DISTINCT
+    seller_id,
+    seller_zip_code_prefix,
+    seller_city,
+    seller_state
+FROM staging.sellers
+WHERE seller_id IS NOT NULL;
+
+-- load product dimension
+INSERT INTO sdw.dim_product ( product_id, category_name, category_name_english, weight, height, length, width)
+SELECT
+    p.product_id,
+    p.product_category_name,
+    t.product_category_name_english,
+    NULLIF(p.product_weight_g, '')::INTEGER AS weight,
+    NULLIF(p.product_height_cm, '')::INTEGER AS height,
+    NULLIF(p.product_length_cm, '') ::INTEGER AS length,
+    NULLIF(p.product_width_cm, '')::INTEGER AS width
+FROM staging.products AS p
+LEFT JOIN staging.product_category_name_translation AS t
+    ON t.product_category_name = p.product_category_name
+WHERE p.product_id IS NOT NULL;
+
+
+
+
