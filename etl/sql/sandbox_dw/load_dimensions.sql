@@ -83,5 +83,11 @@ LEFT JOIN staging.product_category_name_translation AS t
 WHERE p.product_id IS NOT NULL;
 
 
+-- load order_status dimension
+INSERT INTO sdw.dim_order_status (order_status)
+SELECT DISTINCT order_status
+FROM staging.orders
+WHERE order_status IS NOT NULL;
+
 
 
