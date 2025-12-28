@@ -29,37 +29,9 @@ docker compose exec flow python etl/flows/prefect_brazilian_ecommerce_dimensiona
 docker compose -f superset/docker-compose-image-tag.yml up -d
 ```
 
-:memo:
 
-supersetからprefectのdb(etl-db)を参照する場合は、
-下記のnetwork関係の箇所をアンコメントする。
+supersetから`etl-db`を参照するには、networkのconnectが必要。
 
 ```
-  etl-db:
-    image: postgres:15
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
-      - ./db:/docker-entrypoint-initdb.d
-      - ./data/brazilian-e-commerce:/data/brazilian-e-commerce
-#    networks:
-#      - etl-net
-volumes:
-  flow-storage:
-  postgres_data:
-  db-data:
-#networks:
-#  etl-net:
-#    external: true
+docker network connect superset_default etl-playground-etl-db-1
 ```
-
-
-
-
-
-
