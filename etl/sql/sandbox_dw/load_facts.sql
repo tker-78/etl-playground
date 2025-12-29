@@ -91,6 +91,8 @@ GROUP BY
 ;
 
 
+-- load fact_payments
+
 
 
 

@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS sdw.dim_order_status (
 );
 
 CREATE TABLE IF NOT EXISTS sdw.dim_payment_type (
-
+    payment_type_sk SERIAL PRIMARY KEY,
+    payment_type TEXT UNIQUE
 );
 
 -- facts
