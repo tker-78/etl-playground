@@ -49,6 +49,53 @@ LEFT JOIN sdw.dim_date dd_estimated ON dd_estimated.date = NULLIF(o.order_estima
 ;
 
 
+-- load fact_orders
+INSERT INTO sdw.fact_orders (
+                             order_id,
+                             customer_sk,
+                             order_status_sk,
+                             purchase_date_key,
+                             delivered_customer_date_key,
+                             estimated_delivery_date_key,
+                             items_count,
+                             item_price_total,
+                             freight_total,
+                             payment_total
+)
+SELECT
+    o.order_id,
+    dc.customer_sk,
+    dos.order_status_sk,
+    dd_purchase.date_key,
+    dd_delivered.date_key,
+    dd_estimated.date_key,
+    COUNT(oi.order_item_id),
+    SUM(oi.price::numeric),
+    SUM(oi.freight_value::numeric),
+    SUM(op.payment_value::numeric)
+FROM staging.orders o
+LEFT JOIN staging.order_items oi ON oi.order_id = o.order_id
+LEFT JOIN staging.order_payments op ON op.order_id = o.order_id
+LEFT JOIN sdw.dim_customer dc ON dc.customer_id = o.customer_id
+LEFT JOIN sdw.dim_order_status dos ON dos.order_status = o.order_status
+LEFT JOIN sdw.dim_date dd_purchase ON dd_purchase.date = NULLIF(o.order_purchase_timestamp, '')::timestamp::date
+LEFT JOIN sdw.dim_date dd_delivered ON dd_delivered.date = NULLIF(o.order_delivered_customer_date, '')::timestamp::date
+LEFT JOIN sdw.dim_date dd_estimated ON dd_estimated.date = NULLIF(o.order_estimated_delivery_date, '')::timestamp::date
+GROUP BY
+    o.order_id,
+    dc.customer_sk,
+    dos.order_status_sk,
+    dd_purchase.date_key,
+    dd_delivered.date_key,
+    dd_estimated.date_key
+;
+
+
+
+
+
+
+
 
 
 

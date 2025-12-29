@@ -77,7 +77,6 @@ CREATE TABLE IF NOT EXISTS sdw.fact_orders (
     customer_sk INTEGER,
     order_status_sk INTEGER,
     purchase_date_key INTEGER,
-    shipping_limit_date_key INTEGER,
     delivered_customer_date_key INTEGER,
     estimated_delivery_date_key INTEGER,
     items_count INTEGER,
