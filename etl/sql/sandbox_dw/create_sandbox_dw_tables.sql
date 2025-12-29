@@ -54,9 +54,9 @@ CREATE TABLE IF NOT EXISTS sdw.dim_payment_type (
 -- i.e. 注文明細毎の分類
 -- note: order_item_idはグローバルに一意ではないから、grainはorder_item_idではない。
 CREATE TABLE IF NOT EXISTS sdw.fact_order_items (
-    order_item_sk INTEGER PRIMARY KEY,
-    order_id INTEGER,
-    order_item_id INTEGER,
+    order_item_sk SERIAL PRIMARY KEY,
+    order_id TEXT,
+    order_item_id TEXT,
     customer_sk INTEGER,
     seller_sk INTEGER,
     product_sk INTEGER,
