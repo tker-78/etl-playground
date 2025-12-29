@@ -69,16 +69,46 @@ CREATE TABLE IF NOT EXISTS sdw.fact_order_items (
     freight_value NUMERIC(12,2)
 );
 
+-- grain: order_id
+-- i.e. 1注文
+-- note: order_idはビジネスとして一意であることを保証されているから、skは不要。
 CREATE TABLE IF NOT EXISTS sdw.fact_orders (
-
+    order_id TEXT PRIMARY KEY,
+    customer_sk INTEGER,
+    order_status_sk INTEGER,
+    purchase_date_key INTEGER,
+    shipping_limit_date_key INTEGER,
+    delivered_customer_date_key INTEGER,
+    estimated_delivery_date_key INTEGER,
+    items_count INTEGER,
+    item_price_total NUMERIC(12,2),
+    freight_total NUMERIC(12,2),
+    payment_total NUMERIC(12,2)
 );
+
+-- grain: order_id
 
 CREATE TABLE IF NOT EXISTS sdw.fact_payments (
-
+    payment_sk SERIAL PRIMARY KEY,
+    order_id TEXT,
+    payment_sequential INTEGER,
+    payment_type_sk INTEGER,
+    payment_installments INTEGER,
+    payment_value NUMERIC(12,2),
+    purchase_date_key INTEGER,
+    customer_sk INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS sdw.fact_reviews (
+-- grain: review_id
+-- note: review_idはビジネス内でグローバルに一意
 
+CREATE TABLE IF NOT EXISTS sdw.fact_reviews (
+    review_id TEXT,
+    order_id TEXT,
+    customer_sk INTEGER,
+    review_score INTEGER,
+    review_creation_date_key INTEGER,
+    review_answer_date_key INTEGER
 );
 
 
