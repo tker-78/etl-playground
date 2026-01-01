@@ -89,5 +89,9 @@ SELECT DISTINCT order_status
 FROM staging.orders
 WHERE order_status IS NOT NULL;
 
+-- load payment_type dimension
+INSERT INTO sdw.dim_payment_type (payment_type)
+SELECT DISTINCT payment_type
+FROM staging.order_payments;
 
 

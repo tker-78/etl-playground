@@ -92,6 +92,33 @@ GROUP BY
 
 
 -- load fact_payments
+INSERT INTO sdw.fact_payments (
+                               order_id,
+                               payment_sequential,
+                               payment_type_sk,
+                               payment_installments,
+                               payment_value,
+                               purchase_date_key,
+                               customer_sk
+)
+SELECT
+    o.order_id,
+    op.payment_sequential::int,
+    dpt.payment_type_sk,
+    op.payment_installments::int,
+    op.payment_value::numeric,
+    dd_purchase.date_key,
+    dc.customer_sk
+FROM staging.orders o
+INNER JOIN staging.order_payments op
+ON op.order_id = o.order_id
+LEFT JOIN sdw.dim_payment_type dpt
+ON dpt.payment_type = op.payment_type
+LEFT JOIN sdw.dim_date dd_purchase
+ON dd_purchase.date = o.order_purchase_timestamp::timestamp::date
+LEFT JOIN sdw.dim_customer dc
+ON dc.customer_id = o.customer_id;
+
 
 
 
