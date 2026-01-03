@@ -111,6 +111,14 @@ CREATE TABLE IF NOT EXISTS sdw.fact_reviews (
     review_answer_date_key INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS sdw.fact_payment_schedule (
+    payment_sk INTEGER,
+    installment_index INTEGER,
+    scheduled_payment_date_key INTEGER,
+    scheduled_amount NUMERIC(12,2),
+    scheduled_generated_at TIMESTAMP
+);
+
 
 
 

@@ -120,6 +120,54 @@ LEFT JOIN sdw.dim_customer dc
 ON dc.customer_id = o.customer_id;
 
 
+-- load fact_payment_schedule
+-- fact_paymentsから情報を取得して、最終支払までの計画を実体化する。
+WITH base AS (
+    SELECT
+        fp.payment_sk,
+        fp.payment_installments,
+        fp.payment_value,
+        dd.date AS purchase_date
+    FROM sdw.fact_payments fp
+    INNER JOIN sdw.dim_date dd ON dd.date_key = fp.purchase_date_key
+),
+    start_month AS (
+    SELECT *,
+           CASE
+               WHEN EXTRACT(DAY FROM purchase_date) < 20
+                    THEN date_trunc('month', purchase_date) + INTERVAL '1 month'
+               ELSE
+                date_trunc('month', purchase_date) + INTERVAL '2 month'
+    END AS first_payment_month
+    FROM base
+    ),
+    expanded AS (
+    SELECT
+        payment_sk,
+        gs.n + 1 AS payment_index,
+        first_payment_month + (gs.n || 'month')::interval AS payment_month,
+        payment_value / payment_installments AS payment_amount
+    FROM start_month
+    JOIN generate_series(0, payment_installments - 1) AS gs(n)
+    ON true
+    )
+INSERT INTO sdw.fact_payment_schedule (
+                                       payment_sk,
+                                       installment_index,
+                                       scheduled_payment_date_key,
+                                       scheduled_amount,
+                                       scheduled_generated_at
+)
+SELECT
+    payment_sk,
+    payment_index,
+    dd.date_key,
+    payment_amount,
+    CURRENT_TIMESTAMP
+FROM expanded
+INNER JOIN sdw.dim_date dd ON dd.date = payment_month;
+
+
 
 
 
